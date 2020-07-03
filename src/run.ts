@@ -13,7 +13,7 @@ import {
 } from './types';
 import { toHexColor, getPixelFromSource } from './utils';
 
-const FRAME_COUNT = 10; // TODO we can probably take this as input now
+const FRAME_COUNT = 12; // TODO we can probably take this as input now
 
 export const run = async (
   inputFilename: string,

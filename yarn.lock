@@ -7,6 +7,11 @@
   resolved "https://upsidetravel.jfrog.io/upsidetravel/api/npm/npm-virtual/@types/node/-/node-12.12.47.tgz#5007b8866a2f9150de82335ca7e24dd1d59bdfb5"
   integrity sha1-UAe4hmovkVDegjNcp+JN0dWb37U=
 
+"@types/seedrandom@^2.4.28":
+  version "2.4.28"
+  resolved "https://upsidetravel.jfrog.io/upsidetravel/api/npm/npm-virtual/@types/seedrandom/-/seedrandom-2.4.28.tgz#9ce8fa048c1e8c85cb71d7fe4d704e000226036f"
+  integrity sha1-nOj6BIwejIXLcdf+TXBOAAImA28=
+
 ajv@^6.5.5:
   version "6.12.2"
   resolved "https://upsidetravel.jfrog.io/upsidetravel/api/npm/npm-virtual/ajv/-/ajv-6.12.2.tgz#c629c5eced17baf314437918d2da88c99d5958cd"
@@ -407,6 +412,11 @@ safer-buffer@^2.0.2, safer-buffer@^2.1.0, safer-buffer@~2.1.0:
   version "2.1.2"
   resolved "https://upsidetravel.jfrog.io/upsidetravel/api/npm/npm-virtual/safer-buffer/-/safer-buffer-2.1.2.tgz#44fa161b0187b9549dd84bb91802f9bd8385cd6a"
   integrity sha1-RPoWGwGHuVSd2Eu5GAL5vYOFzWo=
+
+seedrandom@^3.0.5:
+  version "3.0.5"
+  resolved "https://upsidetravel.jfrog.io/upsidetravel/api/npm/npm-virtual/seedrandom/-/seedrandom-3.0.5.tgz#54edc85c95222525b0c7a6f6b3543d8e0b3aa0a7"
+  integrity sha1-VO3IXJUiJSWwx6b2s1Q9jgs6oKc=
 
 source-map-support@^0.5.17:
   version "0.5.19"

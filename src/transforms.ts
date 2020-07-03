@@ -1,5 +1,13 @@
+import seedrandom from 'seedrandom';
+
 import { Transform, Color, Dimensions, Coord, Image } from './types';
 import { isTransparent, getAveragePixelValue } from './utils';
+
+const clampColor = ([r, g, b, a]: Color): Color => {
+  const clamp = (n: number) => Math.max(Math.min(n, 255), 0);
+
+  return [clamp(r), clamp(g), clamp(b), clamp(a)];
+};
 
 const mapCoords = (
   [width, height]: Dimensions,
@@ -8,7 +16,7 @@ const mapCoords = (
   const transformedImage: Image = [];
   for (let y = 0; y < height; y += 1) {
     for (let x = 0; x < width; x += 1) {
-      transformedImage.push(...cb([x, y]));
+      transformedImage.push(...clampColor(cb([x, y])));
     }
   }
   return transformedImage;
@@ -37,7 +45,7 @@ const party: Transform = {
         return [0, 0, 0, 0];
       }
 
-      const partyColorIdx = Math.round(
+      const partyColorIdx = Math.floor(
         (frameIndex / totalFrameCount) * PARTY_COLORS.length
       );
       const partyColor = PARTY_COLORS[partyColorIdx];
@@ -61,7 +69,7 @@ const backgroundParty: Transform = {
 
       // Make the transparent parts colorful
       if (isTransparent(srcPixel)) {
-        const partyColorIdx = Math.round(
+        const partyColorIdx = Math.floor(
           (frameIndex / totalFrameCount) * PARTY_COLORS.length
         );
         return PARTY_COLORS[partyColorIdx];
@@ -141,10 +149,11 @@ const radius: Transform<[string]> = {
   },
 };
 
-const shocking: Transform<[string]> = {
+const staticc: Transform<[string]> = {
   name: 'static',
-  fn: ({ dimensions, getSourcePixel, parameters }) => {
+  fn: ({ dimensions, getSourcePixel, parameters, frameIndex }) => {
     const strength = parseFloat(parameters[0]);
+    const rnd = seedrandom(frameIndex.toString());
 
     return mapCoords(dimensions, (coord) => {
       const src = getSourcePixel(coord);
@@ -153,9 +162,43 @@ const shocking: Transform<[string]> = {
         return [0, 0, 0, 0];
       }
 
-      const inverse = Math.ceil(Math.random() * strength) > 1;
+      const inverse = Math.ceil(rnd() * strength) > 1;
 
       return inverse ? [255 - src[0], 255 - src[1], 255 - src[2], src[3]] : src;
+    });
+  },
+};
+
+const lightningIntensities: Color[] = [
+  [0, 15, 40, 255], // dark color
+  [150, 150, 175, 255],
+  [180, 180, 205, 255],
+  [210, 210, 235, 255],
+];
+
+const lightning: Transform = {
+  name: 'lightning',
+  fn: ({ dimensions, getSourcePixel, frameIndex, totalFrameCount }) => {
+    const rnd = seedrandom(frameIndex.toString());
+
+    const i = rnd();
+    const flashIntensity = i > 0.92 ? 3 : i > 0.85 ? 2 : i > 0.75 ? 1 : 0;
+
+    return mapCoords(dimensions, (coord) => {
+      const src = getSourcePixel(coord);
+
+      if (isTransparent(src)) {
+        return lightningIntensities[flashIntensity];
+      }
+
+      if (flashIntensity > 0) {
+        // We're flashing, so brighten up the image a little
+        const icf = 1.02 * flashIntensity;
+        return [src[0] * icf, src[1] * icf, src[2] * icf, src[3]];
+      }
+
+      // Image is dark
+      return src;
     });
   },
 };
@@ -166,5 +209,6 @@ export const transformsList = [
   radius,
   rotate,
   bounce,
-  shocking,
+  staticc,
+  lightning,
 ];

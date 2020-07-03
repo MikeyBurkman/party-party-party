@@ -26,6 +26,10 @@ echo "Building bouncing-smile.gif"
 echo "Building static-smile.gif"
 ../bin/ppp smile.png static-smile.gif static:1.5
 
+# Lightning
+echo "Building lightning-smile.gif"
+../bin/ppp smile.png lightning-smile.gif lightning
+
 # Bouncing Party
 echo "Building bouncing-party-smile.gif"
 ../bin/ppp smile.png bouncing-party-smile.gif bounce:8 party

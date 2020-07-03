@@ -94,6 +94,18 @@ A value of 1 means no static. Fractional values are allowed
 
 ---
 
+#### Lightning
+
+The `lightning` transformation will cause cause it to look like your gif is in a lightning storm. This takes no parameters.
+
+```sh
+./bin/ppp smile.png lightning-smile.gif lightning
+```
+
+![Lightning Smile Emoji](./examples/lightning-smile.gif 'Lightning Smile Emoji')
+
+---
+
 ## Combining transformations
 
 Multiple transformations may be combined by simply adding more to the arguments list. Be aware that the ordering of transformations may affect how things look.
