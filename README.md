@@ -43,6 +43,42 @@ The `background-party` transformation will turn all background (transparent) pix
 
 ---
 
+#### Rotate
+
+The `rotate` transformation will cause your image to spin. This does not take any parameters.
+
+```sh
+./bin/ppp smile.png rotate-smile.gif rotate
+```
+
+![Rotate Party Smile Emoji](./examples/rotate-smile.gif 'Rotate Smile Emoji')
+
+---
+
+#### Bounce
+
+The `bounce` transformation will cause your image to move up and down. This takes in one parameter, which is the max height from the center it will bounce.
+
+```sh
+./bin/ppp smile.png bounce-smile.gif bounce:8
+```
+
+![Bounce Smile Emoji](./examples/bounce-smile.gif 'Bounce Smile Emoji')
+
+---
+
+#### Shake
+
+The `shake` transformation will cause your image to move left and right. This takes in one parameter, which is the max width from the center it will shake.
+
+```sh
+./bin/ppp smile.png shake-smile.gif bounce:8
+```
+
+![Shake Smile Emoji](./examples/shake-smile.gif 'Shake Smile Emoji')
+
+---
+
 #### Radius
 
 The `radius` transformation will cause your image to move in a circle. It requires one parameter, which is the radius of the circle.
@@ -53,30 +89,6 @@ Note that this may make the image clip with the boundaries.
 ```
 
 ![Radius Party Smile Emoji](./examples/radius-smile.gif 'Radius Smile Emoji')
-
----
-
-#### Rotate
-
-The `rotate` transformation will cause your image to spin. This does not take any parameters.
-
-```sh
-./bin/ppp smile.png rotating-smile.gif rotate
-```
-
-![Rotating Party Smile Emoji](./examples/rotating-smile.gif 'Rotating Smile Emoji')
-
----
-
-#### Bounce
-
-The `bounce` transformation will cause your image to move up and down. This takes in one parameter, which is the max height from the center it will bounce.
-
-```sh
-./bin/ppp smile.png bouncing-smile.gif bounce:8
-```
-
-![Bouncing Smile Emoji](./examples/bouncing-smile.gif 'Bouncing Smile Emoji')
 
 ---
 
@@ -108,13 +120,14 @@ The `lightning` transformation will cause cause it to look like your gif is in a
 
 ## Combining transformations
 
-Multiple transformations may be combined by simply adding more to the arguments list. Be aware that the ordering of transformations may affect how things look.
+Multiple transformations may be combined by simply adding more to the arguments list.
+Be aware that the ordering of transformations may affect how things look. If things look off, try reordering the transformations.
 
 ```sh
-./bin/ppp smile.png bouncing-party-smile.gif bounce:8 party
+./bin/ppp smile.png bounce-party-smile.gif bounce:8 party
 ```
 
-![Bouncing Party Smile Emoji](./examples/bouncing-party-smile.gif 'Bouncing Party Smile Emoji')
+![Bounce Party Smile Emoji](./examples/bounce-party-smile.gif 'Bounce Party Smile Emoji')
 
 ---
 

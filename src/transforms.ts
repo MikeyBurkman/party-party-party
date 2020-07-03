@@ -101,6 +101,28 @@ const bounce: Transform<[string]> = {
   },
 };
 
+const shake: Transform<[string]> = {
+  name: 'shake',
+  fn: ({
+    getSourcePixel,
+    dimensions,
+    frameIndex,
+    totalFrameCount,
+    parameters,
+  }) => {
+    const shakeSpeed = parseFloat(parameters[0]); // TODO Validation
+    return mapCoords(dimensions, ([x, y]) => {
+      const xOffset =
+        x +
+        Math.round(
+          shakeSpeed * Math.cos((frameIndex / totalFrameCount) * 2 * Math.PI)
+        );
+
+      return getSourcePixel([xOffset, y]);
+    });
+  },
+};
+
 const rotate: Transform = {
   name: 'rotate',
   fn: ({ getSourcePixel, frameIndex, totalFrameCount, dimensions }) => {
@@ -206,9 +228,10 @@ const lightning: Transform = {
 export const transformsList = [
   party,
   backgroundParty,
-  radius,
   rotate,
   bounce,
+  shake,
+  radius,
   staticc,
   lightning,
 ];
