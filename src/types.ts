@@ -23,19 +23,19 @@ export interface GetPixelResults {
 
 export interface TransformFnOpts<Params> {
   /**
-   * The coordinates we're trying to map with this function
+   * The image we're trying to transform
    */
-  coord: Coord;
-
-  /**
-   * Function to get the pixel from the source image
-   */
-  getSourcePixel: (coord: Coord) => Color;
+  image: Image;
 
   /**
    * Dimensions of the source and final image
    */
   dimensions: Dimensions;
+
+  /**
+   * Function to get the pixel from the source image
+   */
+  getSourcePixel: (coord: Coord) => Color;
 
   /**
    * The current frame we're rendering. Will be in the range [0, totalFrameCount)
@@ -55,7 +55,7 @@ export interface TransformFnOpts<Params> {
   parameters: Params;
 }
 
-export type TransformFn<Params> = (opts: TransformFnOpts<Params>) => Color;
+export type TransformFn<Params> = (opts: TransformFnOpts<Params>) => Image;
 
 export interface Transform<Params = unknown[]> {
   name: string;

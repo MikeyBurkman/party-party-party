@@ -27,11 +27,18 @@ export const run = async (
   const frames: Image[] = [];
 
   for (let frameIndex = 0; frameIndex < FRAME_COUNT; frameIndex += 1) {
-    const frame = buildImageFrame(
-      dimensions,
-      originalImage,
-      transformList,
-      frameIndex
+    // Apply each of the transforms in order, passing the image created from the previous transform to the next
+    const frame = transformList.reduce(
+      (image, transformInput) =>
+        transformInput.transform.fn({
+          image,
+          dimensions,
+          frameIndex,
+          getSourcePixel: getPixelFromSource(dimensions, image),
+          parameters: transformInput.params,
+          totalFrameCount: FRAME_COUNT,
+        }),
+      originalImage
     );
     frames.push(frame);
   }
@@ -40,38 +47,6 @@ export const run = async (
   const { image, transparentColor } = encodeTransparency(frames);
 
   createGif(dimensions, image, transparentColor, outputStream);
-};
-
-/**
- * Apply each of the transformers in order to the original image and return the new one
- */
-const buildImageFrame = (
-  dimensions: Dimensions,
-  srcImage: Image,
-  transformList: TransformInput[],
-  frameIndex: number
-): Image => {
-  const [width, height] = dimensions;
-
-  return transformList.reduce((image, transformInput) => {
-    const transformedImage: Image = [];
-    for (let y = 0; y < height; y += 1) {
-      for (let x = 0; x < width; x += 1) {
-        const destPixel = transformInput.transform.fn({
-          coord: [x, y],
-          dimensions,
-          frameIndex,
-          getSourcePixel: getPixelFromSource(dimensions, image),
-          parameters: transformInput.params,
-          totalFrameCount: FRAME_COUNT,
-        });
-
-        transformedImage.push(...destPixel);
-      }
-    }
-
-    return transformedImage;
-  }, srcImage);
 };
 
 /**

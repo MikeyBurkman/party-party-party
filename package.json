@@ -31,7 +31,8 @@
   },
   "scripts": {
     "build": "tsc",
-    "pretty": "prettier --write \"**/*.{js,md,ts}\""
+    "pretty": "prettier --write \"**/*.{js,md,ts}\"",
+    "examples": "cd examples && ./buildExamples.sh"
   },
   "dependencies": {
     "@types/node": "^12",
