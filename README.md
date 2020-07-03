@@ -27,9 +27,9 @@ The `party` transformation will turn all foreground (non-transparent) pixels mul
 ./bin/ppp smile.png party-smile.gif party
 ```
 
----
-
 ![Party Smiling Emoji](./examples/party-smile.gif 'Party Smiling Emoji')
+
+---
 
 #### Background Party
 
@@ -41,6 +41,8 @@ The `background-party` transformation will turn all background (transparent) pix
 
 ![Background Party Smiling Emoji](./examples/background-party-smile.gif 'Background Party Smiling Emoji')
 
+---
+
 #### Radius
 
 The `radius` transformation will cause your image to move in a circle. It requires one parameter, which is the radius of the circle.
@@ -50,9 +52,9 @@ Note that this may make the image clip with the boundaries.
 ./bin/ppp smile.png radius-smile.gif radius:5
 ```
 
----
-
 ![Radius Party Smile Emoji](./examples/radius-smile.gif 'Radius Smile Emoji')
+
+---
 
 #### Rotate
 
@@ -62,9 +64,9 @@ The `rotate` transformation will cause your image to spin. This does not take an
 ./bin/ppp smile.png rotating-smile.gif rotate
 ```
 
----
-
 ![Rotating Party Smile Emoji](./examples/rotating-smile.gif 'Rotating Smile Emoji')
+
+---
 
 #### Bounce
 
