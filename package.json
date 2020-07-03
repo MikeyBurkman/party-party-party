@@ -2,6 +2,7 @@
   "name": "party-party-party",
   "version": "2.0.0",
   "description": "Turn a source image into an animated party emoji",
+  "private": true,
   "repository": {
     "type": "git",
     "url": "git://github.com/MikeyBurkman/party-party-party.git"
@@ -25,14 +26,12 @@
   "engines": {
     "node": "12.x"
   },
-  "main": "index.js",
   "bin": {
     "ppp": "./bin/ppp"
   },
   "scripts": {
     "build": "tsc",
-    "pretty": "prettier --write \"**/*.{js,md,ts}\"",
-    "start": "ts-node src/run.ts"
+    "pretty": "prettier --write \"**/*.{js,md,ts}\""
   },
   "dependencies": {
     "@types/node": "^12",
