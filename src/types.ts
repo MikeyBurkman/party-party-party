@@ -21,6 +21,8 @@ export interface GetPixelResults {
   data: number[];
 }
 
+export type Random = seedrandom.prng;
+
 export interface TransformFnOpts<Params> {
   /**
    * The image we're trying to transform
@@ -48,6 +50,11 @@ export interface TransformFnOpts<Params> {
   totalFrameCount: number;
 
   /**
+   * Use to generate "random" numbers. It's seeded, so that subsequent calls will yield the same value on the same image.
+   */
+  random: Random;
+
+  /**
    * User-passed in parameters.
    * These need to be validated.
    * TODO We can probably add custom runtypes validation so this can all be typesafe.
@@ -57,14 +64,15 @@ export interface TransformFnOpts<Params> {
 
 export type TransformFn<Params> = (opts: TransformFnOpts<Params>) => Image;
 
-export interface Transform<Params = unknown[]> {
+export interface Transform<Params = unknown> {
   name: string;
   fn: TransformFn<Params>;
+  validateParams?: (params: string[]) => Params;
 }
 
-export interface TransformInput {
-  transform: Transform<any>;
-  params: any[];
+export interface TransformInput<T> {
+  transform: Transform<T>;
+  params: T;
 }
 
 /**

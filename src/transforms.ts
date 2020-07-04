@@ -1,7 +1,12 @@
-import seedrandom from 'seedrandom';
-
-import { Transform, Color, Dimensions, Coord, Image } from './types';
-import { isTransparent, getAveragePixelValue } from './utils';
+import {
+  Transform,
+  Color,
+  Dimensions,
+  Coord,
+  Image,
+  TransformInput,
+} from './types';
+import { assert, isTransparent, getAveragePixelValue } from './utils';
 
 const clampColor = ([r, g, b, a]: Color): Color => {
   const clamp = (n: number) => Math.max(Math.min(n, 255), 0);
@@ -35,7 +40,7 @@ const PARTY_COLORS: Color[] = [
   [255, 105, 104, 255],
 ];
 
-const party: Transform = {
+export const party: Transform = {
   name: 'party',
   fn: ({ getSourcePixel, dimensions, frameIndex, totalFrameCount }) =>
     mapCoords(dimensions, (coord) => {
@@ -61,7 +66,7 @@ const party: Transform = {
     }),
 };
 
-const backgroundParty: Transform = {
+export const backgroundParty: Transform = {
   name: 'background-party',
   fn: ({ getSourcePixel, dimensions, frameIndex, totalFrameCount }) =>
     mapCoords(dimensions, (coord) => {
@@ -79,16 +84,21 @@ const backgroundParty: Transform = {
     }),
 };
 
-const bounce: Transform<[string]> = {
+export const bounce: Transform<number> = {
   name: 'bounce',
+  validateParams: (args) => {
+    assert(args.length === 1, 'bounce requires one argument');
+    const x = parseFloat(args[0]);
+    assert(x, 'bounce requires a non-zero number for an argument');
+    return x;
+  },
   fn: ({
     getSourcePixel,
     dimensions,
     frameIndex,
     totalFrameCount,
-    parameters,
+    parameters: bounceSpeed,
   }) => {
-    const bounceSpeed = parseFloat(parameters[0]); // TODO Validation
     return mapCoords(dimensions, ([x, y]) => {
       const yOffset =
         y +
@@ -101,16 +111,21 @@ const bounce: Transform<[string]> = {
   },
 };
 
-const shake: Transform<[string]> = {
+export const shake: Transform<number> = {
   name: 'shake',
+  validateParams: (args) => {
+    assert(args.length === 1, 'shake requires one argument');
+    const x = parseFloat(args[0]);
+    assert(x, 'shake requires a non-zero number for an argument');
+    return x;
+  },
   fn: ({
     getSourcePixel,
     dimensions,
     frameIndex,
     totalFrameCount,
-    parameters,
+    parameters: shakeSpeed,
   }) => {
-    const shakeSpeed = parseFloat(parameters[0]); // TODO Validation
     return mapCoords(dimensions, ([x, y]) => {
       const xOffset =
         x +
@@ -123,7 +138,7 @@ const shake: Transform<[string]> = {
   },
 };
 
-const rotate: Transform = {
+export const rotate: Transform = {
   name: 'rotate',
   fn: ({ getSourcePixel, frameIndex, totalFrameCount, dimensions }) => {
     const centerX = dimensions[0] / 2;
@@ -147,17 +162,21 @@ const rotate: Transform = {
   },
 };
 
-const radius: Transform<[string]> = {
-  name: 'radius',
+export const circle: Transform<number> = {
+  name: 'circle',
+  validateParams: (args) => {
+    assert(args.length === 1, 'circle requires one argument');
+    const x = parseInt(args[0], 10);
+    assert(x > 0, 'circle requires a positive non-zero number for an argument');
+    return x;
+  },
   fn: ({
     getSourcePixel,
     dimensions,
     frameIndex,
     totalFrameCount,
-    parameters,
+    parameters: partyRadius,
   }) => {
-    const partyRadius = parseFloat(parameters[0]); // TODO validation
-
     const xOffset = Math.round(
       partyRadius * Math.sin(-2 * Math.PI * (frameIndex / totalFrameCount))
     );
@@ -171,12 +190,15 @@ const radius: Transform<[string]> = {
   },
 };
 
-const staticc: Transform<[string]> = {
+export const staticc: Transform<number> = {
   name: 'static',
-  fn: ({ dimensions, getSourcePixel, parameters, frameIndex }) => {
-    const strength = parseFloat(parameters[0]);
-    const rnd = seedrandom(frameIndex.toString());
-
+  validateParams: (args) => {
+    assert(args.length === 1, 'static requires one argument');
+    const x = parseFloat(args[0]);
+    assert(x, 'static requires a non-zero number for an argument');
+    return x;
+  },
+  fn: ({ dimensions, getSourcePixel, parameters: strength, random }) => {
     return mapCoords(dimensions, (coord) => {
       const src = getSourcePixel(coord);
 
@@ -184,7 +206,7 @@ const staticc: Transform<[string]> = {
         return [0, 0, 0, 0];
       }
 
-      const inverse = Math.ceil(rnd() * strength) > 1;
+      const inverse = Math.ceil(random() * strength) > 1;
 
       return inverse ? [255 - src[0], 255 - src[1], 255 - src[2], src[3]] : src;
     });
@@ -198,13 +220,11 @@ const lightningIntensities: Color[] = [
   [210, 210, 235, 255],
 ];
 
-const lightning: Transform = {
+export const lightning: Transform = {
   name: 'lightning',
-  fn: ({ dimensions, getSourcePixel, frameIndex, totalFrameCount }) => {
-    const rnd = seedrandom(frameIndex.toString());
-
-    const i = rnd();
-    const flashIntensity = i > 0.92 ? 3 : i > 0.85 ? 2 : i > 0.75 ? 1 : 0;
+  fn: ({ dimensions, getSourcePixel, random }) => {
+    const i = random();
+    const flashIntensity = i < 0.4 ? 0 : i < 0.7 ? 1 : i < 0.9 ? 2 : 3;
 
     return mapCoords(dimensions, (coord) => {
       const src = getSourcePixel(coord);
@@ -225,13 +245,21 @@ const lightning: Transform = {
   },
 };
 
+export const tranformInput = <T>(
+  transform: Transform<T>,
+  params: T
+): TransformInput<T> => ({
+  transform,
+  params,
+});
+
 export const transformsList = [
   party,
   backgroundParty,
   rotate,
   bounce,
   shake,
-  radius,
+  circle,
   staticc,
   lightning,
 ];

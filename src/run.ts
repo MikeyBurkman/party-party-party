@@ -3,6 +3,7 @@ import getPixels from 'get-pixels';
 // @ts-ignore TODO
 import gifEncoder from 'gif-encoder';
 import { WriteStream } from 'fs';
+import seedrandom from 'seedrandom';
 
 import {
   GetPixelResults,
@@ -13,20 +14,28 @@ import {
 } from './types';
 import { toHexColor, getPixelFromSource } from './utils';
 
-const FRAME_COUNT = 12; // TODO we can probably take this as input now
+interface RunArgs {
+  inputFilename: string;
+  outputStream: WriteStream;
+  transformList: TransformInput<any>[];
+  frameCount: number;
+}
 
-export const run = async (
-  inputFilename: string,
-  outputStream: WriteStream,
-  transformList: TransformInput[]
-) => {
+export const run = async ({
+  inputFilename,
+  outputStream,
+  transformList,
+  frameCount,
+}: RunArgs) => {
+  const random = seedrandom(inputFilename);
+
   const { shape: dimensions, data: originalImage } = await readImage(
     inputFilename
   );
 
   const frames: Image[] = [];
 
-  for (let frameIndex = 0; frameIndex < FRAME_COUNT; frameIndex += 1) {
+  for (let frameIndex = 0; frameIndex < frameCount; frameIndex += 1) {
     // Apply each of the transforms in order, passing the image created from the previous transform to the next
     const frame = transformList.reduce(
       (image, transformInput) =>
@@ -36,7 +45,8 @@ export const run = async (
           frameIndex,
           getSourcePixel: getPixelFromSource(dimensions, image),
           parameters: transformInput.params,
-          totalFrameCount: FRAME_COUNT,
+          totalFrameCount: frameCount,
+          random,
         }),
       originalImage
     );

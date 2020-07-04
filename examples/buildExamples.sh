@@ -1,41 +1,44 @@
 # Default party
 echo "Building default party-smile.gif"
-../bin/ppp smile.png party-smile.gif party
+../bin/ppp --src=smile.png --dest=party-smile.gif --party
 
 # Background party
 echo "Building backgound-party-smile.gif"
-../bin/ppp smile.png background-party-smile.gif background-party
+../bin/ppp --src=smile.png --dest=background-party-smile.gif --background-party
 
 # Rotate
 echo "Building rotate-smile.gif"
-../bin/ppp smile.png rotate-smile.gif rotate
+../bin/ppp --src=smile.png --dest=rotate-smile.gif --rotate
 
 # Bounce
 echo "Building bounce-smile.gif"
-../bin/ppp smile.png bounce-smile.gif bounce:8
+../bin/ppp --src=smile.png --dest=bounce-smile.gif --bounce=8
 
 # Shake
 echo "Building shake-smile.gif"
-../bin/ppp smile.png shake-smile.gif shake:8
+../bin/ppp --src=smile.png --dest=shake-smile.gif --shake=8
 
-# Radius
-echo "Building radius-smile.gif"
-../bin/ppp smile.png radius-smile.gif radius:5
+# Circle
+echo "Building circle-smile.gif"
+../bin/ppp --src=smile.png --dest=circle-smile.gif --circle=6
 
 # Static
 echo "Building static-smile.gif"
-../bin/ppp smile.png static-smile.gif static:1.5
+../bin/ppp --src=smile.png --dest=static-smile.gif --static=1.5
 
 # Lightning
 echo "Building lightning-smile.gif"
-../bin/ppp smile.png lightning-smile.gif lightning
+../bin/ppp --src=smile.png --dest=lightning-smile.gif --lightning
 
 #### Combo examples ####
 
 # Bouncing Party
 echo "Building bounce-party-smile.gif"
-../bin/ppp smile.png bounce-party-smile.gif bounce:8 party
+../bin/ppp --src=smile.png --dest=bounce-party-smile.gif --bounce=8 --party
 
-# Rotating Bouncing Radius Party
+# Rotating Bouncing Circle Party
 echo "Building everything-smile.gif"
-../bin/ppp smile.png everything-smile.gif static:1.5 rotate bounce:8 radius:5 background-party
+../bin/ppp --src=smile.png --dest=everything-smile.gif --static=1.5 --rotate --bounce=8 --circle=5 --background-party
+
+# Slow Rotate
+../bin/ppp --src=smile.png --dest=slow-rotate-smile.gif --rotate --frame-count=24

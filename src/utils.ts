@@ -1,3 +1,5 @@
+import { AssertionError } from 'assert';
+
 import { Color, Coord, Dimensions, Image } from './types';
 
 /**
@@ -28,3 +30,22 @@ export const getPixelFromSource = (
   const idx = x * 4 + y * 4 * width;
   return [image[idx], image[idx + 1], image[idx + 2], image[idx + 3]];
 };
+
+/**
+ * Asserts that a given value is truthy. Uses TypeScript 3.7 assertion types.
+ *
+ * @example
+ * ```ts
+ * const foo: string|undefined = getSomeData();
+ * asert(foo, 'foo must be defined');
+ * console.log(foo.length); // OK
+ * ```
+ */
+export function assert(
+  condition: unknown,
+  message = 'Unexpected falsy value'
+): asserts condition {
+  if (!condition) {
+    throw new AssertionError({ message, actual: condition });
+  }
+}
