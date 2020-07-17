@@ -7,49 +7,40 @@ import seedrandom from 'seedrandom';
 
 import { Color, TransformInput, Image, Dimensions, ImageData } from './types';
 import { toHexColor, getPixelFromSource } from './utils';
+import { tranformInput } from './transforms';
 
 interface RunArgs {
   inputFilename: string;
   outputStream: WriteStream;
   transformList: TransformInput<any>[];
-  frameCount: number;
 }
 
 export const run = async ({
   inputFilename,
   outputStream,
   transformList,
-  frameCount,
 }: RunArgs) => {
   const random = seedrandom(inputFilename);
 
   const originalImage = await readImage(inputFilename);
 
-  const frames: Image[] = [];
-
-  for (let frameIndex = 0; frameIndex < frameCount; frameIndex += 1) {
-    // Apply each of the transforms in order, passing the image created from the previous transform to the next
-    const frame = transformList.reduce(
-      (image, transformInput) =>
-        transformInput.transform.fn({
-          image,
-          frameIndex,
-          getSourcePixel: getPixelFromSource(image),
-          parameters: transformInput.params,
-          totalFrameCount: frameCount,
-          random,
-        }),
-      originalImage
-    );
-    frames.push(frame);
-  }
+  const newImage: Image = transformList.reduce(
+    (image, transformInput) =>
+      transformInput.transform.fn({
+        image,
+        getSourcePixel: getPixelFromSource(image.dimensions),
+        parameters: transformInput.params,
+        random,
+      }),
+    originalImage
+  );
 
   // Transform any of our transparent pixels to what our gif understands to be transparent
   const { image, transparentColor } = encodeTransparency(
-    frames.map((f) => f.data)
+    newImage.frames.map((f) => f.data)
   );
 
-  createGif(frames[0].shape, image, transparentColor, outputStream);
+  createGif(newImage.dimensions, image, transparentColor, outputStream);
 };
 
 /**
@@ -108,11 +99,21 @@ const createGif = (
 
 const readImage = (inputFilename: string): Promise<Image> =>
   new Promise<Image>((res, rej) =>
-    getPixels(inputFilename, (err: Error, getPixelResults: Image) => {
-      if (err) {
-        return rej(err);
-      } else {
-        return res(getPixelResults);
+    getPixels(
+      inputFilename,
+      (err: Error, getPixelResults: { shape: Dimensions; data: ImageData }) => {
+        if (err) {
+          return rej(err);
+        } else {
+          return res({
+            frames: [
+              {
+                data: getPixelResults.data,
+              },
+            ],
+            dimensions: getPixelResults.shape,
+          });
+        }
       }
-    })
+    )
   );

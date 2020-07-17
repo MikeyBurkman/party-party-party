@@ -18,12 +18,16 @@ export type Dimensions = [number, number];
  */
 export type ImageData = number[];
 
+export type Frame = {
+  data: ImageData;
+};
+
 /**
  * The results of get-pixels processImage()
  */
 export interface Image {
-  shape: Dimensions;
-  data: ImageData;
+  dimensions: Dimensions;
+  frames: Frame[];
 }
 
 export type Random = seedrandom.prng;
@@ -37,17 +41,7 @@ export interface TransformFnOpts<Params> {
   /**
    * Function to get the pixel from the source image
    */
-  getSourcePixel: (coord: Coord) => Color;
-
-  /**
-   * The current frame we're rendering. Will be in the range [0, totalFrameCount)
-   */
-  frameIndex: number;
-
-  /**
-   * Total number of frames that the final gif will have
-   */
-  totalFrameCount: number;
+  getSourcePixel: (image: ImageData, coord: Coord) => Color;
 
   /**
    * Use to generate "random" numbers. It's seeded, so that subsequent calls will yield the same value on the same image.

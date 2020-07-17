@@ -9,7 +9,6 @@ import { assert } from './utils';
 // See examples/buildExamples.sh for usage
 
 const NAMED_ARG_REGEX = /^--([\w-]+)(=(.+))?$/;
-const DEFAULT_FRAME_COUNT = 12;
 const TRANSFORM_NAMES = transformsList.map((t) => t.name);
 
 interface ParsedArg {
@@ -45,17 +44,6 @@ const parseTransform = (transformArg: ParsedArg): TransformInput<any> => {
   };
 };
 
-const getFrameCount = (frameCountArg: ParsedArg | undefined): number => {
-  if (!frameCountArg) {
-    return DEFAULT_FRAME_COUNT;
-  }
-
-  assert(frameCountArg.param, 'A value for --frame-count needs to be given');
-  const frameCount = parseInt(frameCountArg.param, 10);
-  assert(frameCount > 0, 'Value for --frame-count must be a positive integer');
-  return frameCount;
-};
-
 const f = async () => {
   const args = process.argv.slice(2);
 
@@ -63,7 +51,6 @@ const f = async () => {
 
   let inputFnameArg = undefined;
   let outputFnameArg = undefined;
-  let frameCountArg = undefined;
   const transformArgs: ParsedArg[] = [];
 
   for (const a of parsedArgs) {
@@ -71,8 +58,6 @@ const f = async () => {
       inputFnameArg = a;
     } else if (a.name === 'dest') {
       outputFnameArg = a;
-    } else if (a.name === 'frame-count') {
-      frameCountArg = a;
     } else if (TRANSFORM_NAMES.includes(a.name)) {
       transformArgs.push(a);
     } else {
@@ -99,7 +84,6 @@ const f = async () => {
     inputFilename: inputFnameArg.param,
     outputStream: createWriteStream(output),
     transformList: transforms,
-    frameCount: getFrameCount(frameCountArg),
   });
 };
 

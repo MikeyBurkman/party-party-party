@@ -1,4 +1,4 @@
-- Allow transforms to change the number of frames
+- Figure out a better transparent pixel, instead of always picking green
 - Glowing transformation (maybe selectable glow color?)
 - Expand transformation (image expands and contracts)
 - Use levenshtein distance to help with transform name typos

@@ -1,6 +1,6 @@
 import { AssertionError } from 'assert';
 
-import { Color, Coord, Dimensions, Image } from './types';
+import { Color, Coord, Dimensions, ImageData } from './types';
 
 /**
  * Converts a Pixel into a hex string like '0x00FF00'
@@ -19,10 +19,11 @@ export const isTransparent = (pixel: Color) => pixel[3] < 64;
 export const getAveragePixelValue = ([r, g, b]: Color) =>
   Math.round((r + g + b) / 3);
 
-export const getPixelFromSource = ({ data: image, shape }: Image) => (
+export const getPixelFromSource = (dimensions: Dimensions) => (
+  image: ImageData,
   coord: Coord
 ): Color => {
-  const [width, height] = shape;
+  const [width, height] = dimensions;
   const [x, y] = coord;
   if (x < 0 || x >= width || y < 0 || y >= height) {
     return [0, 0, 0, 0]; // Default to transparent if an invalid coordinate
