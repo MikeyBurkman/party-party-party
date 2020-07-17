@@ -20,7 +20,6 @@ Note: If you'd like to create emojis for Slack, make sure your input image is 12
 - All arguments start with `--`:
   - `--src=FILENAME` This is the name of source file that you wish to transform
   - `--dest=FILENAME` This is the name of the gif that will be created
-  - `--frame-count=NUMBER` This is an optional argument to specify how many frames the final gif will have. This often determines the speed of the animations. Defaults to 12 if not provided.
   - All other arguments are transforms
     - Given in the form `--<NAME>=<ARG1>,<ARG2>`. Some transforms have no arguments, and thus require just `--<NAME>`. See the examples below for specifics.
     - These transforms are processed in the same order that they appear.
