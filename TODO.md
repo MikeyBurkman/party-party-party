@@ -1,3 +1,8 @@
-1. Allow transformations to change dimensions
-2. Glowing transformation (maybe selectable glow color?)
-3. Expand transformation (image expands and contracts)
+- Allow transforms to change dimensions
+- Allow transforms to change the number of frames
+- Glowing transformation (maybe selectable glow color?)
+- Expand transformation (image expands and contracts)
+- Use levenshtein distance to help with transform name typos
+- Allow transforms to call other transforms first. (IE: party might call grayscale first)
+- bang-head-into-wall effect?
+- Cold effect (make image blue, add snow animation)

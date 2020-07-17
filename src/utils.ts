@@ -19,10 +19,11 @@ export const isTransparent = (pixel: Color) => pixel[3] < 64;
 export const getAveragePixelValue = ([r, g, b]: Color) =>
   Math.round((r + g + b) / 3);
 
-export const getPixelFromSource = (
-  [width, height]: Dimensions,
-  image: Image
-) => ([x, y]: Coord): Color => {
+export const getPixelFromSource = ({ data: image, shape }: Image) => (
+  coord: Coord
+): Color => {
+  const [width, height] = shape;
+  const [x, y] = coord;
   if (x < 0 || x >= width || y < 0 || y >= height) {
     return [0, 0, 0, 0]; // Default to transparent if an invalid coordinate
   }

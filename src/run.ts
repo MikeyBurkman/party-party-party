@@ -5,13 +5,7 @@ import gifEncoder from 'gif-encoder';
 import { WriteStream } from 'fs';
 import seedrandom from 'seedrandom';
 
-import {
-  GetPixelResults,
-  Color,
-  TransformInput,
-  Image,
-  Dimensions,
-} from './types';
+import { Color, TransformInput, Image, Dimensions, ImageData } from './types';
 import { toHexColor, getPixelFromSource } from './utils';
 
 interface RunArgs {
@@ -29,9 +23,7 @@ export const run = async ({
 }: RunArgs) => {
   const random = seedrandom(inputFilename);
 
-  const { shape: dimensions, data: originalImage } = await readImage(
-    inputFilename
-  );
+  const originalImage = await readImage(inputFilename);
 
   const frames: Image[] = [];
 
@@ -41,9 +33,8 @@ export const run = async ({
       (image, transformInput) =>
         transformInput.transform.fn({
           image,
-          dimensions,
           frameIndex,
-          getSourcePixel: getPixelFromSource(dimensions, image),
+          getSourcePixel: getPixelFromSource(image),
           parameters: transformInput.params,
           totalFrameCount: frameCount,
           random,
@@ -54,9 +45,11 @@ export const run = async ({
   }
 
   // Transform any of our transparent pixels to what our gif understands to be transparent
-  const { image, transparentColor } = encodeTransparency(frames);
+  const { image, transparentColor } = encodeTransparency(
+    frames.map((f) => f.data)
+  );
 
-  createGif(dimensions, image, transparentColor, outputStream);
+  createGif(frames[0].shape, image, transparentColor, outputStream);
 };
 
 /**
@@ -64,14 +57,14 @@ export const run = async ({
  * We transform each pixel that appears transparent to be a designated transparent color.
  */
 const encodeTransparency = (
-  frames: Image[]
-): { image: Image[]; transparentColor: Color } => {
+  frames: ImageData[]
+): { image: ImageData[]; transparentColor: Color } => {
   // We need a transparent color, so we're going green screen. If you got green, it'll be transparent. Sorry.
   // TODO: Go through the pixels in each frame and find a color that isn't used, and make that our transparent color.
   const transparentColor: Color = [0, 255, 0, 255];
 
   const image = frames.map((frame) => {
-    const img: Image = [];
+    const img: ImageData = [];
     for (let i = 0; i < frame.length; i += 4) {
       if (frame[i + 3] < 128) {
         // Anything more than halfway transparent is considered transparent
@@ -91,7 +84,7 @@ const encodeTransparency = (
 
 const createGif = (
   dimensions: Dimensions,
-  frames: Image[],
+  frames: ImageData[],
   transparentColor: Color,
   outputStream: WriteStream
 ) => {
@@ -113,9 +106,9 @@ const createGif = (
   gif.finish();
 };
 
-const readImage = (inputFilename: string): Promise<GetPixelResults> =>
-  new Promise<GetPixelResults>((res, rej) =>
-    getPixels(inputFilename, (err: Error, getPixelResults: GetPixelResults) => {
+const readImage = (inputFilename: string): Promise<Image> =>
+  new Promise<Image>((res, rej) =>
+    getPixels(inputFilename, (err: Error, getPixelResults: Image) => {
       if (err) {
         return rej(err);
       } else {

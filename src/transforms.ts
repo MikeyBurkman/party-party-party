@@ -1,10 +1,10 @@
 import {
   Transform,
   Color,
-  Dimensions,
   Coord,
   Image,
   TransformInput,
+  ImageData,
 } from './types';
 import { assert, isTransparent, getAveragePixelValue } from './utils';
 
@@ -14,17 +14,18 @@ const clampColor = ([r, g, b, a]: Color): Color => {
   return [clamp(r), clamp(g), clamp(b), clamp(a)];
 };
 
-const mapCoords = (
-  [width, height]: Dimensions,
-  cb: (coord: Coord) => Color
-): Image => {
-  const transformedImage: Image = [];
+const mapCoords = (image: Image, cb: (coord: Coord) => Color): Image => {
+  const [width, height] = image.shape;
+  const transformedImageData: ImageData = [];
   for (let y = 0; y < height; y += 1) {
     for (let x = 0; x < width; x += 1) {
-      transformedImage.push(...clampColor(cb([x, y])));
+      transformedImageData.push(...clampColor(cb([x, y])));
     }
   }
-  return transformedImage;
+  return {
+    data: transformedImageData,
+    shape: image.shape,
+  };
 };
 
 const PARTY_COLORS: Color[] = [
@@ -42,8 +43,8 @@ const PARTY_COLORS: Color[] = [
 
 export const party: Transform = {
   name: 'party',
-  fn: ({ getSourcePixel, dimensions, frameIndex, totalFrameCount }) =>
-    mapCoords(dimensions, (coord) => {
+  fn: ({ getSourcePixel, image, frameIndex, totalFrameCount }) =>
+    mapCoords(image, (coord) => {
       const srcPixel = getSourcePixel(coord);
 
       if (isTransparent(srcPixel)) {
@@ -68,8 +69,8 @@ export const party: Transform = {
 
 export const backgroundParty: Transform = {
   name: 'background-party',
-  fn: ({ getSourcePixel, dimensions, frameIndex, totalFrameCount }) =>
-    mapCoords(dimensions, (coord) => {
+  fn: ({ getSourcePixel, image, frameIndex, totalFrameCount }) =>
+    mapCoords(image, (coord) => {
       const srcPixel = getSourcePixel(coord);
 
       // Make the transparent parts colorful
@@ -94,12 +95,12 @@ export const bounce: Transform<number> = {
   },
   fn: ({
     getSourcePixel,
-    dimensions,
+    image,
     frameIndex,
     totalFrameCount,
     parameters: bounceSpeed,
   }) => {
-    return mapCoords(dimensions, ([x, y]) => {
+    return mapCoords(image, ([x, y]) => {
       const yOffset =
         y +
         Math.round(
@@ -121,12 +122,12 @@ export const shake: Transform<number> = {
   },
   fn: ({
     getSourcePixel,
-    dimensions,
+    image,
     frameIndex,
     totalFrameCount,
     parameters: shakeSpeed,
   }) => {
-    return mapCoords(dimensions, ([x, y]) => {
+    return mapCoords(image, ([x, y]) => {
       const xOffset =
         x +
         Math.round(
@@ -140,11 +141,11 @@ export const shake: Transform<number> = {
 
 export const rotate: Transform = {
   name: 'rotate',
-  fn: ({ getSourcePixel, frameIndex, totalFrameCount, dimensions }) => {
-    const centerX = dimensions[0] / 2;
-    const centerY = dimensions[1] / 2;
+  fn: ({ getSourcePixel, frameIndex, totalFrameCount, image }) => {
+    const centerX = image.shape[0] / 2;
+    const centerY = image.shape[1] / 2;
 
-    return mapCoords(dimensions, ([x, y]) => {
+    return mapCoords(image, ([x, y]) => {
       const xRelCenter = x - centerX;
       const yRelCenter = y - centerY;
 
@@ -172,7 +173,7 @@ export const circle: Transform<number> = {
   },
   fn: ({
     getSourcePixel,
-    dimensions,
+    image,
     frameIndex,
     totalFrameCount,
     parameters: partyRadius,
@@ -184,7 +185,7 @@ export const circle: Transform<number> = {
       partyRadius * Math.cos(-2 * Math.PI * (frameIndex / totalFrameCount))
     );
 
-    return mapCoords(dimensions, ([x, y]) =>
+    return mapCoords(image, ([x, y]) =>
       getSourcePixel([x + xOffset, y + yOffset])
     );
   },
@@ -198,8 +199,8 @@ export const staticc: Transform<number> = {
     assert(x, 'static requires a non-zero number for an argument');
     return x;
   },
-  fn: ({ dimensions, getSourcePixel, parameters: strength, random }) => {
-    return mapCoords(dimensions, (coord) => {
+  fn: ({ image, getSourcePixel, parameters: strength, random }) => {
+    return mapCoords(image, (coord) => {
       const src = getSourcePixel(coord);
 
       if (isTransparent(src)) {
@@ -222,11 +223,11 @@ const lightningIntensities: Color[] = [
 
 export const lightning: Transform = {
   name: 'lightning',
-  fn: ({ dimensions, getSourcePixel, random }) => {
+  fn: ({ image, getSourcePixel, random }) => {
     const i = random();
-    const flashIntensity = i < 0.4 ? 0 : i < 0.7 ? 1 : i < 0.9 ? 2 : 3;
+    const flashIntensity = i < 0.9 ? 0 : i < 0.95 ? 1 : i < 0.98 ? 2 : 3;
 
-    return mapCoords(dimensions, (coord) => {
+    return mapCoords(image, (coord) => {
       const src = getSourcePixel(coord);
 
       if (isTransparent(src)) {
@@ -239,10 +240,26 @@ export const lightning: Transform = {
         return [src[0] * icf, src[1] * icf, src[2] * icf, src[3]];
       }
 
-      // Image is dark
+      // No lightning
       return src;
     });
   },
+};
+
+export const grayscale: Transform = {
+  name: 'grayscale',
+  fn: ({ image, getSourcePixel }) =>
+    mapCoords(image, (coord) => {
+      const srcPixel = getSourcePixel(coord);
+
+      if (isTransparent(srcPixel)) {
+        return [0, 0, 0, 0];
+      }
+
+      const gray = getAveragePixelValue(srcPixel);
+
+      return [gray, gray, gray, 255];
+    }),
 };
 
 export const tranformInput = <T>(
@@ -262,4 +279,5 @@ export const transformsList = [
   circle,
   staticc,
   lightning,
+  grayscale,
 ];

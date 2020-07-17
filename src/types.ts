@@ -14,11 +14,16 @@ export type Coord = [number, number];
 export type Dimensions = [number, number];
 
 /**
+ * a one-dimensional array of pixels; looks like [r1,g1,b1,a1, r2,g2,b2,a2,...]
+ */
+export type ImageData = number[];
+
+/**
  * The results of get-pixels processImage()
  */
-export interface GetPixelResults {
+export interface Image {
   shape: Dimensions;
-  data: number[];
+  data: ImageData;
 }
 
 export type Random = seedrandom.prng;
@@ -28,11 +33,6 @@ export interface TransformFnOpts<Params> {
    * The image we're trying to transform
    */
   image: Image;
-
-  /**
-   * Dimensions of the source and final image
-   */
-  dimensions: Dimensions;
 
   /**
    * Function to get the pixel from the source image
@@ -74,8 +74,3 @@ export interface TransformInput<T> {
   transform: Transform<T>;
   params: T;
 }
-
-/**
- * a one-dimensional array of pixels; looks like [r1,g1,b1,a1, r2,g2,b2,a2,...]
- */
-export type Image = number[];
