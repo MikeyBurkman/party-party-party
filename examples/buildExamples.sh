@@ -38,6 +38,10 @@ echo "Building static-smile.gif"
 echo "Building lightning-smile.gif"
 ../bin/ppp --src=smile.png --dest=lightning-smile.gif --frame-count=10 --lightning
 
+# Ripple
+echo "Building ripple-smile.gif"
+../bin/ppp --src=smile.png --dest=ripple-smile.gif --frame-count=10 --ripple=10,4
+
 #### Combo examples ####
 
 # Bouncing Party

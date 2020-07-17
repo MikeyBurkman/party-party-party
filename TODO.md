@@ -1,3 +1,4 @@
+- Set a color to use instead of transparent in the final image
 - Manually set a transparent pixel color, or coordinates to use for transparent
 - Figure out a better transparent pixel, instead of always picking green
 - Glowing transformation (maybe selectable glow color?)

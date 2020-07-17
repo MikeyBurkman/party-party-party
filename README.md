@@ -143,13 +143,26 @@ A value of 1 means no static. Fractional values are allowed
 
 #### Lightning
 
-The `lightning` transformation will cause cause it to look like your gif is in a lightning storm. This takes no parameters.
+The `lightning` transformation will cause it to look like your gif is in a lightning storm. This takes no parameters.
 
 ```sh
 ../bin/ppp --src=smile.png --dest=lightning-smile.gif --frame-count=10 --lightning
 ```
 
 ![Lightning Smile Emoji](./examples/lightning-smile.gif 'Lightning Smile Emoji')
+
+---
+
+#### Ripple
+
+The `ripple` transformation will cause it to look like your gif is in liquid. This takes two parameters for amplitude and period.
+A higher amplitude will cause the horizontal distortion to be more pronounced, while a higher period will cause more ripples.
+
+```sh
+../bin/ppp --src=smile.png --dest=ripple-smile.gif --frame-count=10 --ripple=10,4
+```
+
+![Ripple Smile Emoji](./examples/ripple-smile.gif 'Ripple Smile Emoji')
 
 ---
 
