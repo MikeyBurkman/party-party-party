@@ -1,4 +1,3 @@
-- Allow transforms to change dimensions
 - Allow transforms to change the number of frames
 - Glowing transformation (maybe selectable glow color?)
 - Expand transformation (image expands and contracts)

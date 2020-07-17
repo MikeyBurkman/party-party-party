@@ -28,6 +28,40 @@ const mapCoords = (image: Image, cb: (coord: Coord) => Color): Image => {
   };
 };
 
+export const resize: Transform<{ width: number; height: number }> = {
+  name: 'resize',
+  validateParams: (args) => {
+    assert(args.length === 2, 'resize requires two arguments');
+    const width = parseFloat(args[0]);
+    const height = parseFloat(args[1]);
+    assert(width > 0, 'resize requires a non-zero number for the width');
+    assert(height > 0, 'resize requires a non-zero number for the height');
+    return { width, height };
+  },
+  fn: ({ getSourcePixel, image, parameters }) => {
+    const [width, height] = image.shape;
+    const { width: newWidth, height: newHeight } = parameters;
+    const xRatio = width / newWidth;
+    const yRatio = height / newHeight;
+
+    const transformedImageData: ImageData = [];
+    for (let y = 0; y < newHeight; y += 1) {
+      for (let x = 0; x < newWidth; x += 1) {
+        // Simple nearest-neighbor image scaling.
+        // Arguably the worst of the scaling algorithms, but it's quick,
+        //  and we're generally dealing with small images anyhow.
+        const srcX = Math.floor(x * xRatio);
+        const srcY = Math.floor(y * yRatio);
+        transformedImageData.push(...getSourcePixel([srcX, srcY]));
+      }
+    }
+    return {
+      data: transformedImageData,
+      shape: [newWidth, newHeight],
+    };
+  },
+};
+
 const PARTY_COLORS: Color[] = [
   [255, 141, 139, 255],
   [254, 214, 137, 255],
@@ -271,6 +305,7 @@ export const tranformInput = <T>(
 });
 
 export const transformsList = [
+  resize,
   party,
   backgroundParty,
   rotate,

@@ -1,6 +1,10 @@
 # Default party
-echo "Building default party-smile.gif"
+echo "Building party-smile.gif"
 ../bin/ppp --src=smile.png --dest=party-smile.gif --party
+
+# Resize
+echo "Building big-smile.gif"
+../bin/ppp --src=smile.png --dest=big-smile.gif --resize=320,320
 
 # Background party
 echo "Building backgound-party-smile.gif"
@@ -34,7 +38,7 @@ echo "Building lightning-smile.gif"
 
 # Bouncing Party
 echo "Building bounce-party-smile.gif"
-../bin/ppp --src=smile.png --dest=bounce-party-smile.gif --bounce=8 --party
+../bin/ppp --src=smile.png --dest=bounce-party-smile.gif --resize=120,120 --bounce=8 --party
 
 # Rotating Bouncing Circle Party
 echo "Building everything-smile.gif"

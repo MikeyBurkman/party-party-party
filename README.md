@@ -39,6 +39,18 @@ The `party` transformation will turn all foreground (non-transparent) pixels mul
 
 ---
 
+#### Resize
+
+The `resize` transformation will change the size of the image to the given width,height (in pixels)
+
+```sh
+../bin/ppp --src=smile.png --dest=big-smile.gif --resize=320,320
+```
+
+![Big Smiling Emoji](./examples/big-smile.gif 'Big Smiling Emoji')
+
+---
+
 #### Background Party
 
 The `background-party` transformation will turn all background (transparent) pixels multiple colors. This does not take any parameters.
@@ -132,7 +144,7 @@ Multiple transformations may be combined by simply adding more to the arguments 
 Be aware that the ordering of transformations may affect how things look. If things look off, try reordering the transformations.
 
 ```sh
-../bin/ppp --src=smile.png --dest=bounce-party-smile.gif --bounce=8 --party
+../bin/ppp --src=smile.png --dest=bounce-party-smile.gif --resize=120,120 --bounce=8 --party
 ```
 
 ![Bounce Party Smile Emoji](./examples/bounce-party-smile.gif 'Bounce Party Smile Emoji')
