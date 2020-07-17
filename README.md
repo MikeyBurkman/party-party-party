@@ -169,18 +169,10 @@ Be aware that the ordering of transformations may affect how things look. If thi
 And if you really just want to go overboard...
 
 ```sh
-../bin/ppp --src=smile.png --dest=everything-smile.gif --frame-count=10 --static=1.5 --rotate --bounce=8 --circle=5 --background-party
+../bin/ppp --src=smile.png --dest=everything-smile.gif --resize=240,240 --resize-background=320,320 --frame-count=20 --rotate=-1 --circle=50 --background-party
 ```
 
-![Everything Smile Emoji](./examples/everything-smile.gif 'Everything Smile Emoji')
-
-## Slowing things down with more frames
-
-Many transformations are based on the current frame index in the gif. This is needed to keep the animation smooth when played in a loop. For instance, for the `rotate` transform, the image will _always_ be completely upside down when halfway through the frame count.
+Note that many transformations are based on the current frame index in the gif. This is needed to keep the animation smooth when played in a loop. For instance, with the `rotate` transform, the image will _always_ be completely upside down when halfway through the frame count.
 Adding extra frames can slow down the animation, but beware that this will also increase the file size.
 
-```sh
-../bin/ppp --src=smile.png --dest=slow-rotate-smile.gif --frame-count=24 --rotate=-1
-```
-
-![Slow Rotate Smile Emoji](./examples/slow-rotate-smile.gif 'Slow Rotate Smile Emoji')
+![Everything Smile Emoji](./examples/everything-smile.gif 'Everything Smile Emoji')

@@ -46,7 +46,4 @@ echo "Building bounce-party-smile.gif"
 
 # Rotating Bouncing Circle Party
 echo "Building everything-smile.gif"
-../bin/ppp --src=smile.png --dest=everything-smile.gif --frame-count=10 --static=1.5 --rotate --bounce=8 --circle=5 --background-party
-
-# Slow Rotate
-../bin/ppp --src=smile.png --dest=slow-rotate-smile.gif --frame-count=24 --rotate=-1
+../bin/ppp --src=smile.png --dest=everything-smile.gif --resize=240,240 --resize-background=320,320 --frame-count=20 --rotate=-1 --circle=50 --background-party
