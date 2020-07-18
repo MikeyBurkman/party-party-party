@@ -1,3 +1,5 @@
+import seedrandom from 'seedrandom';
+
 /**
  * [R, G, B, A] in values 0 - 255 inclusive
  */
@@ -45,8 +47,6 @@ export interface TransformFnOpts<Params> {
 
   /**
    * User-passed in parameters.
-   * These need to be validated.
-   * TODO We can probably add custom runtypes validation so this can all be typesafe.
    */
   parameters: Params;
 }

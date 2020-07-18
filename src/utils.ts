@@ -1,3 +1,4 @@
+import seedrandom from 'seedrandom';
 import { AssertionError } from 'assert';
 
 import {
@@ -23,7 +24,21 @@ export const toHexColor = ([r, g, b]: Color) => {
   return `0x${toHexValue(r)}${toHexValue(g)}${toHexValue(b)}`;
 };
 
+export const fromHexColor = (hex: string): Color => [
+  parseInt(hex.substr(2, 2), 16),
+  parseInt(hex.substr(4, 2), 16),
+  parseInt(hex.substr(6, 2), 16),
+  255,
+];
+
 export const isTransparent = (pixel: Color) => pixel[3] < 64;
+
+export const randomColor = (random: seedrandom.prng): Color => [
+  Math.floor(random.int32() * 256),
+  Math.floor(random.int32() * 256),
+  Math.floor(random.int32() * 256),
+  255,
+];
 
 export const getAveragePixelValue = ([r, g, b]: Color) =>
   Math.round((r + g + b) / 3);

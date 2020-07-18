@@ -6,7 +6,13 @@ import { WriteStream } from 'fs';
 import seedrandom from 'seedrandom';
 
 import { Color, TransformInput, Image, Dimensions, ImageData } from './types';
-import { toHexColor } from './utils';
+import {
+  toHexColor,
+  getPixelFromSource,
+  randomColor,
+  fromHexColor,
+  isTransparent,
+} from './utils';
 
 interface RunArgs {
   inputFilename: string;
@@ -33,9 +39,12 @@ export const run = async ({
     originalImage
   );
 
+  const transparentColor = getTransparentColor(newImage, random);
+
   // Transform any of our transparent pixels to what our gif understands to be transparent
-  const { image, transparentColor } = encodeTransparency(
-    newImage.frames.map((f) => f.data)
+  const image = encodeTransparency(
+    newImage.frames.map((f) => f.data),
+    transparentColor
   );
 
   createGif(newImage.dimensions, image, transparentColor, outputStream);
@@ -46,12 +55,9 @@ export const run = async ({
  * We transform each pixel that appears transparent to be a designated transparent color.
  */
 const encodeTransparency = (
-  frames: ImageData[]
-): { image: ImageData[]; transparentColor: Color } => {
-  // We need a transparent color, so we're going green screen. If you got green, it'll be transparent. Sorry.
-  // TODO: Go through the pixels in each frame and find a color that isn't used, and make that our transparent color.
-  const transparentColor: Color = [0, 255, 0, 255];
-
+  frames: ImageData[],
+  transparentColor: Color
+): ImageData[] => {
   const image = frames.map((frame) => {
     const img: ImageData = [];
     for (let i = 0; i < frame.length; i += 4) {
@@ -68,7 +74,7 @@ const encodeTransparency = (
     return img;
   });
 
-  return { image, transparentColor };
+  return image;
 };
 
 const createGif = (
@@ -115,3 +121,40 @@ const readImage = (inputFilename: string): Promise<Image> =>
       }
     )
   );
+
+const getTransparentColor = (image: Image, random: seedrandom.prng): Color => {
+  const seenPixels = new Set<string>();
+  const [width, height] = image.dimensions;
+  let attempt = toHexColor([0, 255, 0, 255]); // Just start with green for now, since it's a likely candidate
+  image.frames.forEach((frame) => {
+    for (let y = 0; y < height; y += 1) {
+      for (let x = 0; x < width; x += 1) {
+        const px = getPixelFromSource(image.dimensions, frame.data, [x, y]);
+        if (!isTransparent(px)) {
+          const hex = toHexColor(px);
+          seenPixels.add(hex);
+          if (hex === attempt) {
+            // Uh oh, can't use our current pick for transparent because it exists in the image already
+            attempt = findRandomColorNotInSet(random, seenPixels);
+          }
+        }
+      }
+    }
+  });
+  return fromHexColor(attempt);
+};
+
+const findRandomColorNotInSet = (
+  random: seedrandom.prng,
+  set: Set<string>,
+  attempts = 0
+): string => {
+  const col = toHexColor(randomColor(random));
+  if (attempts > 2000) {
+    // Just give up in order to prevent a stack overflow or something...
+    return col;
+  }
+  return set.has(col)
+    ? findRandomColorNotInSet(random, set, attempts + 1)
+    : col;
+};
