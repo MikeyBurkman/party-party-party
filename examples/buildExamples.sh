@@ -42,6 +42,10 @@ echo "Building lightning-smile.gif"
 echo "Building ripple-smile.gif"
 ../bin/ppp --src=smile.png --dest=ripple-smile.gif --frame-count=10 --ripple=10,4
 
+# Solid Background
+echo "Building solid-background-smile.gif"
+../bin/ppp --src=smile.png --dest=solid-background-smile.gif --solid-background=0x0000FF
+
 #### Combo examples ####
 
 # Bouncing Party

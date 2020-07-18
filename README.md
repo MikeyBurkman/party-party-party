@@ -166,6 +166,18 @@ A higher amplitude will cause the horizontal distortion to be more pronounced, w
 
 ---
 
+#### Solid Background
+
+The `solid-background` transformation will cause all transparent pixels to be instead rendered with the given solid color. The only argument is the color's hex code, in the format `0xRRGGBB`
+
+```sh
+../bin/ppp --src=smile.png --dest=solid-background-smile.gif --solid-background=0x0000FF
+```
+
+![Solid Background Smile Emoji](./examples/solid-background-smile.gif 'Solid-background Smile Emoji')
+
+---
+
 ## Combining transformations
 
 Multiple transformations may be combined by simply adding more to the arguments list.

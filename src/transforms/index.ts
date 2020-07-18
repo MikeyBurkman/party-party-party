@@ -12,6 +12,7 @@ import { resizeBackground } from './resize-background';
 import { ripple } from './ripple';
 import { rotate } from './rotate';
 import { shake } from './shake';
+import { solidBackground } from './solid-background';
 import { staticc } from './static';
 
 /**
@@ -26,17 +27,18 @@ export const tranformInput = <T>(
 });
 
 export const transformsList = [
+  backgroundParty,
+  bounce,
+  circle,
   frameCount,
+  grayscale,
+  lightning,
+  party,
   resize,
   resizeBackground,
-  party,
-  backgroundParty,
-  rotate,
-  bounce,
-  shake,
-  circle,
-  staticc,
-  lightning,
   ripple,
-  grayscale,
+  rotate,
+  shake,
+  solidBackground,
+  staticc,
 ];
