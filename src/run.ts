@@ -6,8 +6,7 @@ import { WriteStream } from 'fs';
 import seedrandom from 'seedrandom';
 
 import { Color, TransformInput, Image, Dimensions, ImageData } from './types';
-import { toHexColor, getPixelFromSource } from './utils';
-import { tranformInput } from './transforms';
+import { toHexColor } from './utils';
 
 interface RunArgs {
   inputFilename: string;
@@ -28,7 +27,6 @@ export const run = async ({
     (image, transformInput) =>
       transformInput.transform.fn({
         image,
-        getSourcePixel: getPixelFromSource(image.dimensions),
         parameters: transformInput.params,
         random,
       }),

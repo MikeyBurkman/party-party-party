@@ -39,11 +39,6 @@ export interface TransformFnOpts<Params> {
   image: Image;
 
   /**
-   * Function to get the pixel from the source image
-   */
-  getSourcePixel: (image: ImageData, coord: Coord) => Color;
-
-  /**
    * Use to generate "random" numbers. It's seeded, so that subsequent calls will yield the same value on the same image.
    */
   random: Random;
