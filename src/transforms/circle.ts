@@ -5,7 +5,7 @@ export const circle: Transform<{ partyRadius: number }> = {
   name: 'circle',
   validateParams: (args) => {
     assert(args.length === 1, 'circle requires one argument');
-    const partyRadius = parseInt(args[0], 10);
+    const partyRadius = parseFloat(args[0]);
     assert(
       partyRadius > 0,
       'circle requires a positive non-zero number for an argument'

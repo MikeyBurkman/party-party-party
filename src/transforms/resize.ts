@@ -5,8 +5,8 @@ export const resize: Transform<{ width: number; height: number }> = {
   name: 'resize',
   validateParams: (args) => {
     assert(args.length === 2, 'resize requires two arguments');
-    const width = parseFloat(args[0]);
-    const height = parseFloat(args[1]);
+    const width = parseInt(args[0], 10);
+    const height = parseInt(args[1], 10);
     assert(width > 0, 'resize requires a non-zero number for the width');
     assert(height > 0, 'resize requires a non-zero number for the height');
     return { width, height };

@@ -5,7 +5,7 @@ export const frameCount: Transform<{ count: number }> = {
   name: 'frame-count',
   validateParams: (args) => {
     assert(args.length === 1, 'frame-count requires one argument');
-    const count = parseFloat(args[0]);
+    const count = parseInt(args[0], 10);
     assert(count > 0, 'frame-count requires a non-zero number');
     return { count };
   },

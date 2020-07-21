@@ -5,8 +5,8 @@ export const resizeBackground: Transform<{ width: number; height: number }> = {
   name: 'resize-background',
   validateParams: (args) => {
     assert(args.length === 2, 'resize-background requires two arguments');
-    const width = parseFloat(args[0]);
-    const height = parseFloat(args[1]);
+    const width = parseInt(args[0], 10);
+    const height = parseInt(args[1], 10);
     assert(
       width > 0,
       'resize-background requires a non-zero number for the width'
