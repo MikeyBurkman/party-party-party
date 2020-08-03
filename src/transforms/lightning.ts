@@ -1,3 +1,5 @@
+import seedrandom from 'seedrandom';
+
 import { Color, Transform } from '../types';
 import {
   mapFrames,
@@ -13,11 +15,15 @@ const lightningIntensities: Color[] = [
   [210, 210, 235, 255],
 ];
 
-export const lightning: Transform = {
+export const lightning: Transform<{ random: seedrandom.prng }> = {
   name: 'lightning',
-  fn: ({ image, random }) =>
+  validateParams: (args) => {
+    const seed = args[0] ?? 'lightning';
+    return { random: seedrandom(seed) };
+  },
+  fn: ({ image, parameters }) =>
     mapFrames(image, (data) => {
-      const i = random();
+      const i = parameters.random();
       const flashIntensity = i < 0.9 ? 0 : i < 0.95 ? 1 : i < 0.98 ? 2 : 3;
 
       return mapCoords(image.dimensions, (coord) => {

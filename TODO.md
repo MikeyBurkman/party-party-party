@@ -1,3 +1,4 @@
+- Fill out README with recently-added effects
 - Manually set a transparent pixel color, or coordinates to use for transparent
 - Glowing transformation (maybe selectable glow color?)
 - Expand transformation (image expands and contracts)
@@ -5,3 +6,4 @@
 - Allow transforms to call other transforms first. (IE: party might call grayscale first)
 - bang-head-into-wall effect?
 - Cold effect (make image blue, add snow animation)
+- Heartbeat effect

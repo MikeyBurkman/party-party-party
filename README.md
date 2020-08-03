@@ -143,7 +143,8 @@ A value of 1 means no static. Fractional values are allowed
 
 #### Lightning
 
-The `lightning` transformation will cause it to look like your gif is in a lightning storm. This takes no parameters.
+The `lightning` transformation will cause it to look like your gif is in a lightning storm. This takes one optional argument, which is
+the random seed. Provide any string for the argument to change randomness of the lightning flashes.
 
 ```sh
 ../bin/ppp --src=smile.png --dest=lightning-smile.gif --frame-count=10 --lightning

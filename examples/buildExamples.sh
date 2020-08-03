@@ -42,9 +42,17 @@ echo "Building lightning-smile.gif"
 echo "Building ripple-smile.gif"
 ../bin/ppp --src=smile.png --dest=ripple-smile.gif --frame-count=10 --ripple=10,4
 
+# Expand
+echo "Building expand-smile.gif"
+../bin/ppp --src=smile.png --dest=expand-smile.gif --frame-count=20 --expand=14
+
 # Solid Background
 echo "Building solid-background-smile.gif"
 ../bin/ppp --src=smile.png --dest=solid-background-smile.gif --solid-background=0x0000FF
+
+# Roxbury
+echo "Building roxbury-smile.gif"
+../bin/ppp --src=smile.png --dest=roxbury-smile.gif --frame-count=9 --roxbury
 
 #### Combo examples ####
 
